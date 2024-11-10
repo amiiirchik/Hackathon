@@ -64,7 +64,7 @@ def upload():
         filepath = os.path.join(app.config['UPLOAD_FOLDER'], filename)
         file.save(filepath)
         
-        similar_images = compare_images(filepath, REFERENCE_IMAGES)
+        similar_images = compare_images('./' + filepath, REFERENCE_IMAGES)
         
         return jsonify({
             'similar_images': [url for _, url in similar_images],
