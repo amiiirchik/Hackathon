@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="ru">
+	<head>
+		<meta charset="UTF-8" />
+		<title>Поиск похожих изображений</title>
+		<style>
+			body {
+				font-family: Arial, sans-serif;
+				display: flex;
+				justify-content: center;
+				align-items: center;
+				margin: 0;
+			}
+			.container {
+				width: 400px;
+				text-align: center;
+			}
+			input[type='file'] {
+				display: none;
+			}
+			label {
+				background-color: #4caf50;
+				color: white;
+				padding: 10px 20px;
+				border-radius: 5px;
+				cursor: pointer;
+			}
+			img {
+				max-width: 200px;
+				margin-bottom: 10px;
+			}
+			.results {
+				display: grid;
+				grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+				gap: 10px;
+				margin-top: 20px;
+			}
+		</style>
+	</head>
+	<body>
+		<div class="container">
+			<h1>Загрузите изображение</h1>
+			<h2>В данном прототипе модель может распознать картинки на темы: Аккордеон, самолеты, корабли</h2>
+			<input type="file" id="imageInput" accept="image/*" />
+			<label for="imageInput">Выберите файл</label>
+			<div id="resultContainer"></div>
+		</div>
+		<script>
+			document
+				.getElementById('imageInput')
+				.addEventListener('change', function () {
+					const file = this.files[0]
+					if (!file) return
+
+					const formData = new FormData()
+					formData.append('image', file)
+
+					fetch('/upload', {
+						method: 'POST',
+						body: formData,
+					})
+						.then(response => response.json())
+						.then(data => {
+							document.getElementById('resultContainer').innerHTML = `
+            <p>Исходное изображение:</p>
+            <img src="${URL.createObjectURL(file)}" alt="Uploaded Image">
+            <p>Похожие изображения:</p>
+            <div class="results"></div>
+        `
+
+							data.similar_images.forEach(image => {
+								const resultDiv = document.querySelector('.results')
+								const img = document.createElement('img')
+								img.src = image
+								resultDiv.appendChild(img)
+							})
+						})
+						.catch(error => console.error('Ошибка:', error))
+				})
+		</script>
+	</body>
+</html>
