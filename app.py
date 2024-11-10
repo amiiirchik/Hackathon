@@ -40,8 +40,8 @@ def compare_images(query_image, reference_images):
 
 # инициализация приложения
 app = Flask(__name__)
-app.config['UPLOAD_FOLDER'] = 'uploads'
-app.config['STATIC_FOLDER'] = 'reference_images'
+app.config['UPLOAD_FOLDER'] = './uploads'
+app.config['STATIC_FOLDER'] = './static/reference_images'
 
 # Эталонные изображения при старте приложения
 REFERENCE_IMAGES = load_reference_images()
@@ -64,7 +64,7 @@ def upload():
         filepath = os.path.join(app.config['UPLOAD_FOLDER'], filename)
         file.save(filepath)
         
-        similar_images = compare_images('./' + filepath, REFERENCE_IMAGES)
+        similar_images = compare_images(filepath, REFERENCE_IMAGES)
         
         return jsonify({
             'similar_images': [url for _, url in similar_images],
