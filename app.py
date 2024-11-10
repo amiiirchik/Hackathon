@@ -34,7 +34,7 @@ def compare_images(query_image, reference_images):
     similarities = []
     for ref_filename, ref_features in reference_images.items():
         similarity = cosine_similarity(query_features.reshape(1, -1), ref_features.reshape(1, -1))[0][0]
-        similarities.append((similarity, f'/static/reference_images/{ref_filename}'))
+        similarities.append((similarity, f'./static/reference_images/{ref_filename}'))
     similarities.sort(reverse=True)
     return similarities[:10]
 
